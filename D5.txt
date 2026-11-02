@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to print the board
+void printBoard(vector<vector<int>>& board, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            cout << board[i][j] << " ";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+// Function to check whether placing a queen is safe
+bool isSafe(vector<vector<int>>& board, int row, int col, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (board[i][j] == 1) {
+                if (i == row || j == col ||
+                    abs(i - row) == abs(j - col))
+                    return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Backtracking function
+void solveNQueens(vector<vector<int>>& board, int row,
+                  int n, int firstRow, int& count) {
+
+    if (row == n) {
+        printBoard(board, n);
+        count++;
+        return;
+    }
+
+    // Skip row containing the fixed queen
+    if (row == firstRow) {
+        solveNQueens(board, row + 1, n, firstRow, count);
+        return;
+    }
+
+    for (int col = 0; col < n; col++) {
+        if (isSafe(board, row, col, n)) {
+            board[row][col] = 1;
+
+            solveNQueens(board, row + 1, n, firstRow, count);
+
+            board[row][col] = 0; // Backtrack
+        }
+    }
+}
+
+int main() {
+    int n, firstRow, firstCol, count = 0;
+
+    cout << "Enter size of board (N): ";
+    cin >> n;
+
+    if (n <= 0) {
+        cout << "Invalid board size!";
+        return 0;
+    }
+
+    vector<vector<int>> board(n, vector<int>(n, 0));
+
+    cout << "Enter position of first queen (row and column starting from 0): ";
+    cin >> firstRow >> firstCol;
+
+    if (firstRow < 0 || firstRow >= n ||
+        firstCol < 0 || firstCol >= n) {
+        cout << "Invalid position!";
+        return 0;
+    }
+
+    board[firstRow][firstCol] = 1;
+
+    cout << "\nAll possible solutions:\n";
+
+    solveNQueens(board, 0, n, firstRow, count);
+
+    if (count == 0)
+        cout << "No solution exists!\n";
+    else
+        cout << "Total solutions: " << count << endl;
+
+    return 0;
+}
+
+/*Enter size of board (N): 4 
+Enter position of first queen (row and column starting from 0): 0 1
+
+All possible solutions:
+0 1 0 0
+0 0 0 1
+1 0 0 0
+0 0 1 0
+
+Total solutions: 1
+ */ 

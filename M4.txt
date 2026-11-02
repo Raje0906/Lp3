@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def f(x):
+    return (x + 3)**2
+
+def grad_f(x):
+    return 2 * (x + 3)  # derivative of f(x)
+
+
+
+
+x_current = 2          # starting point
+learning_rate = 0.1    # step size
+tolerance = 1e-6       # convergence tolerance
+max_iterations = 25    # maximum iterations
+history = [x_current]  # sotring history
+
+
+
+for i in range(max_iterations):
+    gradient = grad_f(x_current)
+    x_next = x_current - learning_rate * gradient  # update step
+    
+    # Check convergence
+    if abs(x_next - x_current) < tolerance:
+        print(f"Converged after {i+1} iterations.")
+        break
+    
+    x_current = x_next
+    history.append(x_current)
+    print(f"Iteration {i+1}: x = {x_current:.4f}, f(x) = {f(x_current):.4f}")
+
+
+print("Local minima at x =", x_current)
+print("Function value at local minima y =", f(x_current))
+
+
+
+plt.plot(history, [f(val) for val in history], marker='o')
+plt.xlabel("x values")
+plt.ylabel("f(x)")
+plt.title("Gradient Descent Convergence")
+plt.grid()
+plt.show()
